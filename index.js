@@ -1,30 +1,52 @@
 'use strict';
 
 const express = require('express');
-const socketIO = require('socket.io');
+const ws = require('ws');
 const Sequelize = require('sequelize');
+
+// Logger
+const log = require('log4js').getLogger();
 
 // Server
 const app = express();
 const server = require('http').Server(app);
-const io = socketIO(server);
+
+// WebSocket
+const wss = new ws.Server({
+    server
+});
 
 // DB
 const sequelizeClient = new Sequelize('chat_app', 'olafurgardarsson', null, {
     dialect: 'postgres'
 });
 
+// Expose CHError to the world 🌏
+require('./src/utils/CHError');
+
+// Create redis client
+require('./src/config/redis');
+
 // Bootstrap User model
-const UserModel = require('./models/User')(sequelizeClient);
-// Bootstrap api
-require('./src/api')(app, UserModel);
+require('./src/config/models').init(sequelizeClient);
 
 // Boostrap socket
-require('./src/socket')(io);
+require('./src/config/socket')(wss);
+
+// Bootstrap server
+require('./src/config/server')(app);
+
+const services = require('./src/config/services');
+
+// Bootstrap api
+require('./src/config/api')(app, services, wss);
+
+const PORT = process.env.PORT || 3030;
 
 sequelizeClient.sync({
     force: true
 }).then(() => {
-    console.log('Server started on port 3030');
-    server.listen(3030);
+    log.info(`Connected to postgres`);
+    // jshint unused:false
+    server.listen(PORT, _ => log.info(`Server started on port ${PORT} => 🌏`));
 });

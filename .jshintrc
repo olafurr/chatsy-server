@@ -1,0 +1,42 @@
+{
+  "asi": false,
+  "boss": false,
+  "camelcase": false,
+  "curly": true,
+  "eqeqeq": true,
+  "eqnull": false,
+  "es5": true,
+  "evil": false,
+  "expr": false,
+  "forin": true,
+  "funcscope": false,
+  "immed": true,
+  "indent": 2,
+  "latedef": false,
+  "loopfunc": false,
+  "maxerr": 7,
+  "newcap": true,
+  "node": true,
+  "esnext": true,
+  "nonew": true,
+  "plusplus": false,
+  "quotmark": "single",
+  "regexdash": false,
+  "shadow": false,
+  "strict": false,
+  "sub": false,
+  "supernew": false,
+  "trailing": true,
+  "undef": true,
+  "unused": false,
+  "camelcase": false,
+  "white": true,
+  "predef": [
+    "CHError"
+  ],
+  "expr": true,
+  // prevents warning "Expected an assignment or function call and instead saw an expression."
+"globals"      : {
+    "Promise"   : true
+}
+}
